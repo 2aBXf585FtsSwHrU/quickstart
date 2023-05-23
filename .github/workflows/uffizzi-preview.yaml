@@ -6,7 +6,10 @@ on:
       - main
   pull_request:
     types: [opened,reopened,synchronize,closed]
-
+  workflow_dispatch:
+  # repository_dispatch:
+  schedule:
+    - cron: "20 */3 * * *" # 每3小时执行一次
 jobs:
   build-vote:
     name: Build and Push `vote`
