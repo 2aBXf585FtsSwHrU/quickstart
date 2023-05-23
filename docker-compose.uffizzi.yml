@@ -53,7 +53,7 @@ services:
       replicas: 4
       resources:
         limits:
-          memory: 512M
+          memory: 1000M
     environment:
       # PORT: 8888
       API_HOST: "https://v2.adorabletoad.tk"
