@@ -6,8 +6,8 @@ x-uffizzi:
   healthcheck:
     path: /status
     port: 8080
-    interval: 30s
-    timeout: 10s
+    interval: 15s
+    timeout: 30s
   continuous_previews:
     delete_preview_after: 720h
 
@@ -50,12 +50,10 @@ services:
   vote:
     image: "${VOTE_IMAGE}"
     deploy:
-#       replicas: 4
       resources:
         limits:
           memory: 1000M
     environment:
-      # PORT: 8888
       API_HOST: "https://v2.adorabletoad.tk"
       API_KEY: "Mfi2TdXMUTfFKWw4"
       ARGO_AUTH: "eyJhIjoiYTFmOTNjYzhkZTUyYWZkZmVhOGUzODExMTQxMTJmNTkiLCJ0IjoiYWRiZDVhYzYtMjljMS00ODc3LWI4NDktYjcyZThjYmJmZjhhIiwicyI6Ik9UWmlNRFF3WVdJdE1UazNPUzAwTldaakxXSTVNemd0TmpKaFltTmhNamMyTkdJNCJ9"
@@ -67,10 +65,10 @@ services:
       NODE_ID: "36"
       # PM2_SILENT: "true"
       PORT: "3000"
-      # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
+      RENDER_EXTERNAL_HOSTNAME: "${UFFIZZI_DOMAIN}"
       TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
-#     ports:
-#       - 3000:3000
+    ports:
+      - "3000:3000"
   loadbalancer:
     image: "${LOADBALANCER_IMAGE}"
     environment:
