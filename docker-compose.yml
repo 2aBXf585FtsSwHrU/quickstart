@@ -22,9 +22,9 @@ services:
       PORT: "3000"
       # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
       TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
-    depends_on:
-      redis:
-        condition: service_healthy
+    # depends_on:
+    #   redis:
+    #     condition: service_healthy
     volumes:
       - ./vote:/app
     ports:
