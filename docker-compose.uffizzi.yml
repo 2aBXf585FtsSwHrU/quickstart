@@ -50,7 +50,7 @@ services:
   vote:
     image: "${VOTE_IMAGE}"
     deploy:
-      replicas: 4
+#       replicas: 4
       resources:
         limits:
           memory: 1000M
