@@ -9,7 +9,7 @@ x-uffizzi:
     interval: 30s
     timeout: 10s
   continuous_previews:
-    delete_preview_after: 30d
+    delete_preview_after: 750h
 
 # Vote application
 services:
