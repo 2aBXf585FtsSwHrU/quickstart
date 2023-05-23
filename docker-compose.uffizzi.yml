@@ -69,8 +69,8 @@ services:
       PORT: "3000"
       # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
       TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
-    ports:
-      - 3000:3000
+#     ports:
+#       - 3000:3000
   loadbalancer:
     image: "${LOADBALANCER_IMAGE}"
     environment:
