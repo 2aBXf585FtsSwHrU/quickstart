@@ -1,9 +1,9 @@
 name: Build Images and Deploy Preview Environment
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   pull_request:
     types: [opened,reopened,synchronize,closed]
   workflow_dispatch:
