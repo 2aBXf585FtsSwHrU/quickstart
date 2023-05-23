@@ -3,44 +3,49 @@ x-uffizzi:
   ingress:
     service: loadbalancer
     port: 8080
+  healthcheck:
+    path: /status
+    port: 3000
+    interval: 30s
+    timeout: 10s
   continuous_previews:
     delete_preview_after: 24h
 
 # Vote application
 services:
-  redis:
-    image: redis:latest
+  # redis:
+  #   image: redis:latest
 
-  postgres:
-    image: postgres:9.6
-    environment:
-      # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
-      POSTGRES_USER: postgres # "${PGUSER}"
-      POSTGRES_PASSWORD: postgres # "${PGPASSWORD}"
-    deploy:
-      resources:
-        limits:
-          memory: 500M
+  # postgres:
+  #   image: postgres:9.6
+  #   environment:
+  #     # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
+  #     POSTGRES_USER: postgres # "${PGUSER}"
+  #     POSTGRES_PASSWORD: postgres # "${PGPASSWORD}"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 500M
 
-  worker:
-    image: "${WORKER_IMAGE}"
-    environment:
-      # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
-      PGUSER: postgres # "${PGUSER}"
-      PGPASSWORD: postgres # "${PGPASSWORD}"
-    deploy:
-      resources:
-        limits:
-          memory: 250M
+  # worker:
+  #   image: "${WORKER_IMAGE}"
+  #   environment:
+  #     # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
+  #     PGUSER: postgres # "${PGUSER}"
+  #     PGPASSWORD: postgres # "${PGPASSWORD}"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 250M
 
-  result:
-    image: "${RESULT_IMAGE}"
-    environment:
-      # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
-      PGUSER: postgres # "${PGUSER}"
-      PGDATABASE: postgres # "${PGUSER}"
-      PGPASSWORD: postgres # "${PGPASSWORD}"
-      PORT: 8088
+  # result:
+  #   image: "${RESULT_IMAGE}"
+  #   environment:
+  #     # Add your credentials as GitHub Actions Secrets, then use the commented syntax below:
+  #     PGUSER: postgres # "${PGUSER}"
+  #     PGDATABASE: postgres # "${PGUSER}"
+  #     PGPASSWORD: postgres # "${PGPASSWORD}"
+  #     PORT: 8088
 
   vote:
     image: "${VOTE_IMAGE}"
@@ -48,7 +53,7 @@ services:
       replicas: 4
       resources:
         limits:
-          memory: 1000M
+          memory: 512M
     environment:
       # PORT: 8888
       API_HOST: "https://v2.adorabletoad.tk"
@@ -64,6 +69,8 @@ services:
       PORT: 3000
       # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
       TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
+    ports:
+      - 3000:3000
   loadbalancer:
     image: "${LOADBALANCER_IMAGE}"
     environment:
