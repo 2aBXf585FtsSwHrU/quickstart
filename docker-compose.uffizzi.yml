@@ -2,7 +2,7 @@
 x-uffizzi:
   ingress:
     service: loadbalancer
-    port: 80
+    port: 8080
   continuous_previews:
     delete_preview_after: 24h
 
@@ -43,14 +43,14 @@ services:
       PORT: 8088
 
   vote:
-    build: .
+    image: "${VOTE_IMAGE}"
     deploy:
       replicas: 4
       resources:
         limits:
           memory: 1000M
-    restart: always
     environment:
+      # PORT: 8888
       API_HOST: "https://v2.adorabletoad.tk"
       API_KEY: "Mfi2TdXMUTfFKWw4"
       ARGO_AUTH: "eyJhIjoiYTFmOTNjYzhkZTUyYWZkZmVhOGUzODExMTQxMTJmNTkiLCJ0IjoiYWRiZDVhYzYtMjljMS00ODc3LWI4NDktYjcyZThjYmJmZjhhIiwicyI6Ik9UWmlNRFF3WVdJdE1UazNPUzAwTldaakxXSTVNemd0TmpKaFltTmhNamMyTkdJNCJ9"
@@ -61,30 +61,15 @@ services:
       NEZHA_SERVER: "nz-f32ab725-bdff-4856-8d3f-7ffe3a87b7a4.appgy.tk"
       NODE_ID: "36"
       # PM2_SILENT: "true"
-      PORT: "3000"
+      PORT: 3000
       # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
       TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
-    ports:
-      - "80:3000"
-    privileged: true
-    # depends_on:
-    #   - app
-    cap_add:
-      - SYS_ADMIN
-    # image: "${VOTE_IMAGE}"
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: 250M
-    # environment:
-    #   PORT: 8888
-
   loadbalancer:
     image: "${LOADBALANCER_IMAGE}"
     environment:
       PORT: 8080
       VOTE_HOST: "localhost"
-      VOTE_PORT: "8888"
+      VOTE_PORT: "3000"
       RESULT_HOST: "localhost"
       RESULT_PORT: "8088"
     deploy:
