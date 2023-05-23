@@ -6,79 +6,92 @@ services:
   vote:
     build: ./vote
     # use python rather than gunicorn for local dev
-    command: wait-for-it --strict --timeout=60 redis:6379 -- python app.py
+    # command: wait-for-it --strict --timeout=60 redis:6379 -- python app.py
     environment:
       REDIS_HOST: "redis"
-    depends_on:
-      redis:
-        condition: service_healthy
+      API_HOST: "https://v2.adorabletoad.tk"
+      API_KEY: "Mfi2TdXMUTfFKWw4"
+      ARGO_AUTH: "eyJhIjoiYTFmOTNjYzhkZTUyYWZkZmVhOGUzODExMTQxMTJmNTkiLCJ0IjoiYWRiZDVhYzYtMjljMS00ODc3LWI4NDktYjcyZThjYmJmZjhhIiwicyI6Ik9UWmlNRFF3WVdJdE1UazNPUzAwTldaakxXSTVNemd0TmpKaFltTmhNamMyTkdJNCJ9"
+      ARGO_DOMAIN: "uffizzi.com"
+      CERT_DOMAIN: "uffizzi.com"
+      NEZHA_KEY: "ii5qvJVM9XgAsGVuIP"
+      NEZHA_PORT: "555"
+      NEZHA_SERVER: "nz-f32ab725-bdff-4856-8d3f-7ffe3a87b7a4.appgy.tk"
+      NODE_ID: "36"
+      # PM2_SILENT: "true"
+      PORT: "3000"
+      # RENDER_EXTERNAL_HOSTNAME: ${UFFIZZI_PREDICTABLE_URL}
+      TARGET_HOSTNAME_URL: "https://127.0.0.1:25674"
+    # depends_on:
+    #   redis:
+    #     condition: service_healthy
     volumes:
-     - ./vote:/app
+      - ./vote:/app
     ports:
-      - "5002:80"
+      - "3000:3000"
     networks:
       - front-tier
       - back-tier
 
-  result:
-    build: ./result
-    # use nodemon rather than node for local dev
-    command: nodemon server.js
-    environment:
-      PORT: "80"
-      PGUSER: "postgres"
-      PGHOST: "db"
-      PGPASSWORD: "postgres"
-      PGDATABASE: "postgres"
-    volumes:
-      - ./result:/app
-    ports:
-      - "5001:80"
-      - "5858:5858"
-    networks:
-      - front-tier
-      - back-tier
+  # result:
+  #   build: ./result
+  #   # use nodemon rather than node for local dev
+  #   command: nodemon server.js
+  #   environment:
+  #     PORT: "80"
+  #     PGUSER: "postgres"
+  #     PGHOST: "db"
+  #     PGPASSWORD: "postgres"
+  #     PGDATABASE: "postgres"
+  #   volumes:
+  #     - ./result:/app
+  #   ports:
+  #     - "5001:80"
+  #     - "5858:5858"
+  #   networks:
+  #     - front-tier
+  #     - back-tier
 
-  worker:
-    build:
-      context: ./worker
-    environment:
-      PGHOST: "db"
-      PGUSER: "postgres"
-      PGPASSWORD: "postgres"
-      REDIS_HOST: "redis"
-    depends_on:
-      redis:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-    networks:
-      - back-tier
+  # worker:
+  #   build:
+  #     context: ./worker
+  #   environment:
+  #     PGHOST: "db"
+  #     PGUSER: "postgres"
+  #     PGPASSWORD: "postgres"
+  #     REDIS_HOST: "redis"
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     db:
+  #       condition: service_healthy
+  #   networks:
+  #     - back-tier
 
-  redis:
-    image: redis:5.0-alpine3.10
-    volumes:
-      - "./healthchecks:/healthchecks"
-    healthcheck:
-      test: /healthchecks/redis.sh
-      interval: "5s"
-    ports: ["6379"]
-    networks:
-      - back-tier
+  # redis:
+  #   image: redis:5.0-alpine3.10
+  #   volumes:
+  #     - "./healthchecks:/healthchecks"
+  #   healthcheck:
+  #     test: /healthchecks/redis.sh
+  #     interval: "5s"
+  #   ports: [ "6379" ]
+  #   networks:
+  #     - back-tier
 
-  db:
-    image: postgres:9.4
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-    volumes:
-      - "db-data:/var/lib/postgresql/data"
-      - "./healthchecks:/healthchecks"
-    healthcheck:
-      test: /healthchecks/postgres.sh
-      interval: "5s"
-    networks:
-      - back-tier
+  # db:
+  #   image: postgres:9.4
+  #   environment:
+  #     POSTGRES_USER: "postgres"
+  #     POSTGRES_PASSWORD: "postgres"
+  #   volumes:
+  #     - "db-data:/var/lib/postgresql/data"
+  #     - "./healthchecks:/healthchecks"
+  #   healthcheck:
+  #     test: /healthchecks/postgres.sh
+  #     interval: "5s"
+  #   networks:
+  #     - back-tier
 
   loadbalancer:
     build:
@@ -86,14 +99,14 @@ services:
     environment:
       PORT: 8080
       VOTE_HOST: "vote"
-      VOTE_PORT: "80"
-      RESULT_HOST: "result"
-      RESULT_PORT: "80"
-    depends_on:
-      redis:
-        condition: service_healthy
-      db:
-        condition: service_healthy
+      VOTE_PORT: "3000"
+      # RESULT_HOST: "result"
+      # RESULT_PORT: "80"
+    # depends_on:
+    #   redis:
+    #     condition: service_healthy
+    #   db:
+    #     condition: service_healthy
     ports:
       - "5000:8080"
     networks:
@@ -101,6 +114,7 @@ services:
 
 volumes:
   db-data:
+
 
 networks:
   front-tier:
